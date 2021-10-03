@@ -1,5 +1,5 @@
 # parlaConIO
-Inviare messaggi tramite IO a partire da dati contenuti in file .csv
+Inviare messaggi tramite app IO a partire da dati contenuti in file .csv
 
 Script Python per inviare messaggi verso l'app IO partendo da dati contenuti in file CSV
 
