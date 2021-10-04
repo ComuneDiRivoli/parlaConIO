@@ -22,7 +22,7 @@ Il progetto è ideato e mantenuto dal Comune di Rivoli, Servzio SIA (Sistemi Inf
 
 - **preparaDati.py** definisce le caratteristiche più legate alle operazioni sui file usati come fonte di dati o template per i messaggi.
 
-- **inviaLotto\*** sono script specifici per l'invio di lotti di messaggi di un determinato servizio IO (indicazioni nel preambolo del codice); dove possibile una procedura interattiva guida nell'associazione fra le "colonne" del file CSV e le variabili presenti nel template del messaggio.
+- **inviaLotto\*** sono script specifici per l'invio di lotti di messaggi di un determinato servizio IO (indicazioni nel preambolo del codice); dove possibile una procedura interattiva guida nell'associazione fra le "colonne" del file CSV e le variabili presenti nel template del messaggio. Gli script si eseguono indicando come argomento il nome del file csv con i dati da processare. Esempio "py ./inviaLottoScadenzaCI.p ./scadenzaCI.csv".
 
 - **verificaConsegnaLotto.py**: consente di verificare lo stato di consegna di un lotto. Richiede come argomento il file "...-EsitoInvii.json" presente nella cartella di lotto del lotto che si vuole verificare.
 
