@@ -4,7 +4,7 @@ Inviare messaggi tramite app IO a partire da dati contenuti in file .csv
 Script Python per inviare messaggi verso l'app IO partendo da dati contenuti in file CSV
 
 Il progetto comprende degli script Python per **inviare messaggi verso l'app IO a partire da dati contenuti in file CSV**, tipicamente estratti dai software gestionali in uso presso le amministrazioni. Gli script funzionano da riga di comando e dovrebbero essere indipendenti dal sistema operativo in uso (Windows, Linux).
-Le operazioni di composizione e invio dei messaggi sono tracciate e memorizzare su log e file di report in formato testo o json. E' incluso anche uno script per la verifica dell'invio di un lotto (=blocco di messaggi ottenuti a partire da un file CSV con i dati).
+Le operazioni di composizione e invio dei messaggi sono tracciate e memorizzate su log e file di report in formato testo o json. E' incluso anche uno script per la verifica dell'invio di un lotto (=blocco di messaggi ottenuti a partire da un file CSV con i dati).
 
 Gli script consentono di realizzare un dialogo efficace con le API esposte dal sistema app IO, **senza sostenere costi di integrazione degli applicativi in uso**. Infatti, è sufficiente essere in grado di estrarre dagli applicativi i dati necessari alla composizione dei messaggi secondo un template prestabilito e lanciare lo script. L'assenza di un'interfaccia grafica rende l'uso degli script non eccessivamente "friendly" per gli utenti e si consiglia di riservare l'uso degli script al personale tecnico informatico delle amministrazioni o comunque a utenti esperti. Per ogni lotto, nella stessa directory di installazione, è creata una cartella destinata ad accogliere log e report prodotti durante le fasi di composizione, invio e verifica.
 
@@ -18,11 +18,11 @@ Per richieste di assistenza, suggerimenti, proposte e ogni altra discussione sul
 
 Il progetto è ideato e mantenuto dal Comune di Rivoli, Servzio SIA (Sistemi Informativi e Archivistici) ed è aperto alla collaborazione delle amministrazioni interessate.
 
-- **parlaConIO.py** implementa le funzioni di dialogo con IO, inclusa la lista dei servizi attivi con relative API key e la definizione del template del messaggio per ogni template (funzione di norma con nome \"crea_messaggio_\<servizioIO\>\"). 
+- **parlaConIO.py** implementa le funzioni di dialogo con IO con relative API key e di logging. 
 
-- **preparaDati.py** definisce le caratteristiche più legate alle operazioni sui file usati come fonte di dati o prodotti come log/report.
+- **preparaDati.py** definisce le caratteristiche più legate alle operazioni sui file usati come fonte di dati o template per i messaggi.
 
-- **inviaLotto\*** sono script specifici per l'invio di lotti di messaggi di un determinato servizio IO (indicazioni nel preambolo del codice).
+- **inviaLotto\*** sono script specifici per l'invio di lotti di messaggi di un determinato servizio IO (indicazioni nel preambolo del codice); dove possibile una procedura interattiva guida nell'associazione fra le "colonne" del file CSV e le variabili presenti nel template del messaggio.
 
 - **verificaConsegnaLotto.py**: consente di verificare lo stato di consegna di un lotto. Richiede come argomento il file "...-EsitoInvii.json" presente nella cartella di lotto del lotto che si vuole verificare.
 
