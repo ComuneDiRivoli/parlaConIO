@@ -1,7 +1,22 @@
-##Programma per inviare un lotto di messaggi IO con promemoria di scadenza della CI e istruzioni per prendere un appuntamento
-##I dati per l'invio sono sono contenuti in un CSV (con delimitatore ;) con le seguenti etichette (l'ordine non è rilevante e possono esserne presenti di ulteriori):
-##codiceFiscaeìle: codice fiscale dell'intestatario del documento in scadenza
-##dataScadenzaDocumento: nel formato gg/mm/AAAA
+## 
+##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as
+##  published by the Free Software Foundation, either version 3 of the
+##  License, or (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
+
+## Programma per inviare un lotto di messaggi IO con promemoria di scadenza della CI e istruzioni per prendere un appuntamento
+## I dati per l'invio sono sono contenuti in un CSV (con delimitatore ;) con i seguenti dati (ordine e nome delle etichette non sono rilevanti e possono essere presenti ulteriori colonne):
+## codice_fiscale: codice fiscale dell'intestatario del documento in scadenza
+## dataScadenzaDocumento: nel formato gg/mm/AAAA (in realtà il campo viene passato come stringa)
 
 ## Il file CSV con i dati è passato come argomento da linea di comando
 ## Il programma guida attraverso i seguenti passaggi:
@@ -30,7 +45,7 @@ log.setLevel(logging.DEBUG)
 
 listaOK = preparaDati.listaOK ##risposte da interpretare come sì come risposta affermativa in caso di domanda posta dal programma
 crea = preparaDati.crea_body_scadenzaCI ##indicare qui la funzione per la creazione del body del messaggio
-##corrispondenzeDiDefault = {} ##
+##corrispondenzeDiDefault = {} ## Questo dizioanrio DEVE essere sempre presente
 corrispondenzeDiDefault = {'dataScadenzaDocumento': 'dataScadenzaDocumento', 'codiceFiscale': 'codiceFiscale'}
 data_lotto = preparaDati.timestamp()
 
@@ -127,7 +142,7 @@ rigaDiEsempio = tabellaDati[0]
 parametriDiEsempio = {}
 for i in argomenti:
    parametriDiEsempio[i]=rigaDiEsempio[corrispondenze[i]]
-stampa("In base alle tue indicazioni, ho individuato le corripondenza come nel seguente esempio:")
+stampa("In base alle tue indicazioni, ho individuato le corrispondenze come nel seguente esempio:")
 stampa(str(parametriDiEsempio))
 payloadDiEsempio = crea(**parametriDiEsempio)
 stampa("In base alle tue indicazioni, il messaggio risulta formato come segue:")

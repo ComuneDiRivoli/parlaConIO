@@ -1,6 +1,21 @@
-##Programma per verificare gli iscritti a un servizio IO a partire da una lista di codici fiscali
-##I dati per l'invio sono sono contenuti in un CSV (con delimitatore ;) con le seguenti etichette (l'ordine non è rilevante e possono esserne presenti di ulteriori):
-##codiceFiscale: codice fiscale 
+## 
+##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as
+##  published by the Free Software Foundation, either version 3 of the
+##  License, or (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
+
+## Verificare gli iscritti a un servizio IO a partire da una lista di codici fiscali
+## I dati per la verifica sono sono contenuti in un CSV (con delimitatore ;) in cui una colonna (da indicare) contiene il codice fiscale
+
 
 ## Il file CSV con i dati è passato come argomento da linea di comando
 ## Il programma guida attraverso i seguenti passaggi:

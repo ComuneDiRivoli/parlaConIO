@@ -1,4 +1,19 @@
-#parte da un csv con prima riga di etichette e restituisce un array di dizionari (=tabella) Python
+## 
+##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as
+##  published by the Free Software Foundation, either version 3 of the
+##  License, or (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
+
+## Definisce le operazioni utili alla preparazione dei messaggi verso app IO
 
 import csv
 import json
@@ -117,7 +132,6 @@ def crea_body(nome_servizio, causale, importo, codice_avviso, scadenza, email, c
     body["content"] = {"subject":"Avviso di pagamento", "markdown":markdown, "payment_data":payment_data, "due_date": str(data(scadenza))}
     # body["default_addresses"]={"email":email}
     body["fiscal_code"]=codiceFiscale
-    #body=json.dumps(body)
     return body
 
 

@@ -1,3 +1,18 @@
+## 
+##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as
+##  published by the Free Software Foundation, either version 3 of the
+##  License, or (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ## Programma per inviare un lotto di messaggi IO con un messaggio di teto fisso, senza personalizzazioni.
 ## Il testo del messaggio è contenuto nella variaible "testoFisso", il titolo (oggetto) del messaggio nella varibiale "titolo".
 ## L'elenco dei codici fiscali a cui inviare è contenuto in un csv (nome di default listaCF) con i codici fiscali in una colonna che verrà chiesto di individuare.
@@ -9,7 +24,6 @@
 ## Tutte le operazioni e le interazioni con le API di IO sono annotate nel log appIO.log
 ## Il log delle azioni del modulo requests (dialogo con web service remoto) sono annotate in apposito log nella cartella di lotto.
 
-## Il testo del messaggio IO è definito nella variabile "testoFisso"
 
 import preparaDati
 import parlaConIO
@@ -29,8 +43,10 @@ log.setLevel(logging.DEBUG)
 listaOK = preparaDati.listaOK ##risposte da interpretare come sì come risposta affermativa in caso di domanda posta dal programma
 data_lotto = preparaDati.timestamp()
 
+## ## ## ## TESTO E TITOLO DEL MESSAGGIO ## ## ## ##
 testoFisso = "Per semplificare il rapporto con i suoi cittadini, il Comune distribuisce gratuitamente una casella di posta elettronica certificata (PEC). \n \n [Prenota un appuntamento] (https://prenota.comune.rivoli.to.it/pec-gratuita-per-i-cittadini-rivolesi) in Comune per ottenere la tua. \n \n Ulteriori dettagli [sul sito web del Comune] (https://secure.comune.rivoli.to.it/jportal/sprweb/JPModulo.do?MVPG=SprProcedimentoVis&id=746&rv=0&idc=7)."
 titolo = "Richiedi la tua casella PEC gratuita"
+## ## ## ## -- -- --- -- -- -- -- -- -- ## ## ## ##
 
 ##propone lista di servizi io e annota la scelta
 print("Questi sono i servizi IO attualmente configurati per invio di testi fissi:")

@@ -1,17 +1,28 @@
-# in input il json esitoinvii
-# ricava il timestamp dal nome del file (?)
-# per quelli con esito 201 OK fai getMessage e annota il risultato (vedi quali tag prendere)
-# per quelli con esisto 400 falliti fai un nuovo invio
-# TO DO: scrivi: invii totali nel lotto, invii accettati X, invii falliti Y
-# recupero lo stato degli invii accettati
-# invii consegnati XX, invii in attesa di consegna XY, invii scaduti XZ
-# tento nuovamente invii scaduti
-# tento nuovamente invii falliti
+## 
+##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as
+##  published by the Free Software Foundation, either version 3 of the
+##  License, or (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
+
+
+## Lo script consente di verificare lo stato di consegna dei messaggi di un lotto precedentemente inviato
+## Richiede come argomento in input il file <TIMESTAMP>-EsitoInvii.json presente nella cartella del lotto da verificare
+## L'esito della verifica è mostrato a video e memorizzato in file nella cartella di lotto
+## Durante la verifica i messaggi con primo invio fallito sono inviati nuovamente
 
 import parlaConIO
+import preparaDati
 import json
 import csv
-import preparaDati
 import sys
 import os.path
 import os
@@ -22,7 +33,7 @@ from http.client import HTTPConnection  # py3
 log = logging.getLogger('urllib3')
 log.setLevel(logging.DEBUG)
 
-listaOK = ["sì", "SI", "S", "s", "Sì", "OK"] # elenco di parole da interpretare come risposta affermativa in caso di domanda posta dal programma
+listaOK = preparaDati.listaOK ##risposte da interpretare come sì come risposta affermativa in caso di domanda posta dal programma
 
 # il programma attende di avere come argomento il nome del file JSON \'EsitoInvii\' con i dati del lotto da verificare. Se indicato ne controlla l'esistenza; se non indicato invita a riprovare
 if len(sys.argv) > 1:
