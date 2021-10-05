@@ -15,6 +15,8 @@
 
 ## Definisce le operazioni utili alla preparazione dei messaggi verso app IO
 
+## ATTENZIONE: prima dell'uso individuare le occorrenze della stringa XXXXXX e personalizzare di conseguenze
+
 import csv
 import json
 import datetime
@@ -122,7 +124,7 @@ def recuperaArgomenti(funzione): #crea lista di argomenti con keyword attesi da 
 ## attenzione alle interruzioni di riga: si ottengono con doppio spazio seguito da interruzione di linea. Esempio. "Riga di testo dopo la quale andare a capo.  " + "\n"
 ## Il nuovo paragrafo (con linea vuota) si ottiene con '\n \n' nella stringa.
 def crea_body(nome_servizio, causale, importo, codice_avviso, scadenza, email, codiceFiscale):
-    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio "+nome_servizio+",\n \n Causale: "+causale+"\n \nImporto: "+str(importo)+"\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto.  \n  \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://portale.comune.rivoli.to.it) sul sito del Comune di Rivoli. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
+    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio "+nome_servizio+",\n \n Causale: "+causale+"\n \nImporto: "+str(importo)+"\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto.  \n  \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://portale.comune.XXXXXX.to.it) sul sito del Comune di XXXXXX. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
     payment_data={}
     payment_data["amount"] = int(float(importo)*100)
     payment_data["notice_number"] = "3"+codice_avviso
@@ -141,7 +143,7 @@ def crea_body_avviso_pagamento(codice_servizio_incasso, causale, importo, codice
         nome_servizio = str(serviziDiIncasso.serviziDiIncasso[codice_servizio_incasso]["nome"])
     else:
         nome_servizio = "---"
-    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio **"+nome_servizio+"**,  " + "\n" + "**Causale**: " + causale + "  " + "\n" + "**Importo**: euro " + str(importo) + "\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto. \n \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://portale.comune.rivoli.to.it) sul sito del Comune di Rivoli. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
+    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio **"+nome_servizio+"**,  " + "\n" + "**Causale**: " + causale + "  " + "\n" + "**Importo**: euro " + str(importo) + "\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto. \n \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://portale.comune.XXXXXX.to.it) sul sito del Comune di XXXXXX. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
     payment_data={}
     payment_data["amount"] = int(float(importo)*100)
     payment_data["notice_number"] = str(codice_avviso)
@@ -154,7 +156,7 @@ def crea_body_avviso_pagamento(codice_servizio_incasso, causale, importo, codice
 
 ## creazione di un messaggio per promemoria scadenza carta di identità a partire da csv con colonna codiceFiscale e dataScadenzaDocumento
 def crea_body_scadenzaCI(dataScadenzaDocumento, codiceFiscale):
-    markdown = "Ti informiamo che **la tua carta di identità scade il giorno " + dataScadenzaDocumento + "**. Puoi prenotare l'appuntamento per l'emissione di una nuova carta d'identità elettronica utlizzando il servizio online [Prenota un appuntamento](https://prenota.comune.rivoli.to.it/anagrafe-e-stato-civile/18/calendar) sul sito del Comune di Rivoli."
+    markdown = "Ti informiamo che **la tua carta di identità scade il giorno " + dataScadenzaDocumento + "**. Puoi prenotare l'appuntamento per l'emissione di una nuova carta d'identità elettronica utlizzando il servizio online [Prenota un appuntamento](https://prenota.comune.XXXXXX.to.it/anagrafe-e-stato-civile/18/calendar) sul sito del Comune di XXXXXX."
     body={}
     body["time_to_live"] = 3600
     body["content"] = {"subject": "TEST - La tua carta di identità scade a breve", "markdown": markdown}
