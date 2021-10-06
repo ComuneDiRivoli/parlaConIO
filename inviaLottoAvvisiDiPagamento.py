@@ -1,26 +1,11 @@
-## 
-##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU Affero General Public License as
-##  published by the Free Software Foundation, either version 3 of the
-##  License, or (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU Affero General Public License for more details.
-##
-##  You should have received a copy of the GNU Affero General Public License
-##  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
-
-## Programma per inviare un lotto di messaggi IO con avviso di pagamento pagoPA
-## I dati per l'invio sono sono contenuti in un CSV (con delimitatore ;) con i seguenti dati (ordine e nome dell'etichetta non rilevanti, possono essere presenti ulteriori colonne):
-## importo: importo in euro
-## codice_avviso: codice completo dell'avviso (17 cifre)
-## causale: causale completa
-## codiceidentificativoPagatore: codice fiscale del debitore
-## identificativoServizio: codice identificativo del servizio di incasso
-## il codice identificativo del servizo di di incasso è sciolto nella sua denominazione completa tramite il file serviziDiIncasso.py
+##Programma per inviare un lotto di messaggi IO con avviso di pagamento pagoPA
+##I dati per l'invio sono sono contenuti in un CSV (con delimitatore ;) con le seguenti etichette (l'ordine non è rilevante e possono esserne presenti di ulteriori):
+##importo: importo in euro
+##codice_avviso: codice completo dell'avviso (17 cifre)
+##causale: causale completa
+##codiceidentificativoPagatore: codice fiscale del debitore
+##identificativoServizio: codice identificativo del servizio di incasso
+##il codice identificativo del servizoi di incasso è sciolto nella sua denominazione completa tramite il file serviziDEPAG.csv (due colonne: codice; denominazione completa)
 
 ## Il file CSV con i dati è passato come argomento da linea di comando
 ## Il programma guida attraverso i seguenti passaggi:
@@ -31,6 +16,7 @@
 ## Tutte le operazioni e le interazioni con le API di IO sono annotate nel log appIO.log
 
 ## Il testo del messaggio IO è definito in preparaDati.py
+## Il funzionamento è modellato sul file CSV estratto dal gestionale DEPAG di ADS Finmatica ma è adattabile a file di origine differente intervenendo sul codice seguente e su parlaConIO.py e preparaDati.py
 
 import preparaDati
 import parlaConIO
@@ -49,7 +35,7 @@ log.setLevel(logging.DEBUG)
 
 listaOK = preparaDati.listaOK ##risposte da interpretare come sì
 crea = preparaDati.crea_body_avviso_pagamento ##indicare qui la funzione per la creazione del body del messaggio
-##corrispondenzeDiDefault = {} ##questo dizionario DEVE essere sempre presente (eventualmente vuoto)
+##corrispondenzeDiDefault = {} ##
 corrispondenzeDiDefault = {'codice_servizio_incasso': 'identificativoServizio', 'causale': 'causaleDebito', 'importo': 'Importo', 'codice_avviso': 'codiceAvviso', 'scadenza': 'dataScadenza', 'email': 'e-mailPagatore', 'codiceFiscale': 'codiceidentificativoPagatore'}
 data_lotto = preparaDati.timestamp()
 
@@ -74,6 +60,7 @@ else:
 path=preparaDati.crea_cartella(servizioIO, data_lotto) # crea la cartella di lavoro del lotto
 lottoLog=path + data_lotto + "-" + "Lotto.log"
 lottoJson=path + data_lotto + "-" + "Lotto.json"
+erroriCSV = path + data_lotto + "-" + "ErroriCSV.csv"
 risultatoCFJson=path + data_lotto + "-" + "RisultatoCF.json"
 esitoInviiJson=path + data_lotto + "-" + "EsitoInvii.json"
 requestsLog = path + data_lotto + "-" + "Requests.log"
@@ -128,7 +115,7 @@ else:
    exit()
 
 # sezione per l'elaborazione del CSV con i dati da processare e creazione di tabella e JSON
-tabellaDati = preparaDati.importa_da_csv(nomeFileDati)
+(tabellaDati, tabellaErrori, righeErrori) = preparaDati.importa_da_csv(nomeFileDati)
 if tabellaDati==[]:
     print("niente da elaborare, ciao.")
     q = input("Premi INVIO/ENTER per terminare.")
@@ -138,6 +125,12 @@ else:
    etichetteCSV = list(tabellaDati[0].keys())
 preparaDati.esporta_json(tabellaDati, lottoJson, data_lotto)
 stampa("CSV elaborato. Il file JSON " + lottoJson + " contiene i dati estratti.")
+
+if len(tabellaErrori) > 1:
+   preparaDati.esporta_csv(tabellaErrori, erroriCSV, data_lotto)
+   stampa("ATTENZIONE: il CSV contiene almeno una riga con errori. Ho ignorato queste righe e le ho raccolte nel file " + erroriCSV + ".")
+   stampa("Le righe del CSV con errori sono le seguenti: " + str(righeErrori))
+   q = input("Premi INVIO/ENTER per proseguire")
 
 ## SEZIONE per definire le corrispondenze fra argomenti della funzione di creazione del body e il CSV con i dati
 argomenti = preparaDati.recuperaArgomenti(crea)
@@ -160,7 +153,7 @@ rigaDiEsempio = tabellaDati[0]
 parametriDiEsempio = {}
 for i in argomenti:
    parametriDiEsempio[i]=rigaDiEsempio[corrispondenze[i]]
-stampa("In base alle tue indicazioni, ho individuato le corrispondenze come nel seguente esempio:")
+stampa("In base alle tue indicazioni, ho individuato le corripondenza come nel seguente esempio:")
 stampa(str(parametriDiEsempio))
 payloadDiEsempio = crea(**parametriDiEsempio)
 stampa("In base alle tue indicazioni, il messaggio risulta formato come segue:")
@@ -189,7 +182,8 @@ dizionarioCodiciFiscaliUtenti={} #serve per eliminare i codici fiscali presenti 
 
 for riga in tabellaDati:
     cf = riga[corrispondenze["codiceFiscale"]]
-    dizionarioCodiciFiscaliUtenti[cf]=""
+    if cf:
+      dizionarioCodiciFiscaliUtenti[cf]=""
 
 listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 
@@ -220,6 +214,9 @@ invii = []
 if len(risultato["iscritti"]) == 0:
     stampa("Nessun messaggio da inviare, ciao.")
     invii = ["Nessun messaggio inviato."] #migliorare, perche' cosi' ho un json non omogeneo con gli altri
+    preparaDati.esporta_json(invii, esitoInviiJson, data_lotto)
+    q = input("Premi INVIO/ENTER per terminare")
+    exit()
 else:
     for riga in tabellaDati:
         if riga["codiceidentificativoPagatore"] in risultato["iscritti"]:

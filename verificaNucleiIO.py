@@ -1,24 +1,9 @@
-## 
-##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU Affero General Public License as
-##  published by the Free Software Foundation, either version 3 of the
-##  License, or (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU Affero General Public License for more details.
-##
-##  You should have received a copy of the GNU Affero General Public License
-##  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
-
-## Verifica gli iscritti a un servizio IO a partire da una lista di codici fiscali e nuceli familiari di appartenenza
-## I dati per l'invio sono sono contenuti in un CSV (con delimitatore ;) con le seguenti etichette :
-## codiceFiscale: codice fiscale
-## id_nucleo: codice indentificativo del nucleo familiare
-## Le etichette non sono vincolanti.
-## Ordine e numero di colonne sono vincolanti.
+##Programma per verificare gli iscritti a un servizio IO a partire da una lista di codici fiscali e nuceli familiari di appartenenza
+##I dati per l'invio sono sono contenuti in un CSV (con delimitatore ;) con le seguenti etichette :
+##codiceFiscale: codice fiscale
+##id_nucleo: codice indentificativo del nucleo familiare
+##Le etichette non sono vincolanti.
+##Ordine e numero di colonne sono vincolanti
 
 ## Il file CSV con i dati è passato come argomento da linea di comando
 ## Il programma guida attraverso i seguenti passaggi:
@@ -67,6 +52,8 @@ else:
 ## Inizializzazione di cartella di lotto, file di output e logging
 path = preparaDati.crea_cartella("verificaCFeNUCLEI-" + servizioIO, data_lotto) # crea la cartella di lavoro del lotto
 lottoLog = path + data_lotto + "-" + "Lotto.log"
+#lottoJson = path + data_lotto + "-" + "Lotto.json"
+erroriCSV = path + data_lotto + "-" + "ErroriCSV.csv"
 risultatoCFJson = path + data_lotto + "-" + "RisultatoCF.json"
 risultatoNucleiJson = path + data_lotto + "-" + "RisultatoNuclei.json"
 requestsLog = path + data_lotto + "-" + "Requests.log"
@@ -121,15 +108,23 @@ else:
    exit()
 
 #sezione per l'elaborazione del CSV con i dati da processare
-stampa("Importo i codici fiscali dal file CSV fornito.")
-tabellaDati = preparaDati.importa_da_csv(nomeFileDati)
+stampa("Importo i dati dal file CSV fornito.")
+(tabellaDati, tabellaErrori, righeErrori) = preparaDati.importa_da_csv(nomeFileDati)
 if tabellaDati==[]:
     stampa("Niente da elaborare, ciao.")
     q = input("Premi INVIO/ENTER per terminare.")
     stampa("Programma terminato.")
     exit()
+else:
+   chiaviCSV = list(tabellaDati[0].keys())
 
-chiaviCSV = list(tabellaDati[0].keys())
+if len(tabellaErrori) > 1:
+   preparaDati.esporta_csv(tabellaErrori, erroriCSV, data_lotto)
+   stampa("ATTENZIONE: il CSV contiene almeno una riga con errori. Ho ignorato queste righe e le ho raccolte nel file " + erroriCSV + ".")
+   stampa("Le righe del CSV con errori sono le seguenti: " + str(righeErrori))
+   q = input("Premi INVIO/ENTER per proseguire")
+
+##sezione per individuare la colonna del CSV con il codice fiscale e la colonna con il nucleo
 print("Il CSV importato ha le seguenti chiavi:")
 for i in chiaviCSV:
    print(i)
@@ -153,7 +148,8 @@ dizionarioCodiciFiscaliUtenti={} #serve per eliminare i codici fiscali presenti 
 
 for riga in tabellaDati:
     cf = riga[chiaveCF]
-    dizionarioCodiciFiscaliUtenti[cf]=""
+    if cf:
+       dizionarioCodiciFiscaliUtenti[cf]=""
 
 listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 

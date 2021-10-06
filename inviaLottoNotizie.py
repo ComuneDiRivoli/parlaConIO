@@ -1,18 +1,3 @@
-## 
-##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU Affero General Public License as
-##  published by the Free Software Foundation, either version 3 of the
-##  License, or (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU Affero General Public License for more details.
-##
-##  You should have received a copy of the GNU Affero General Public License
-##  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 ## Programma per inviare un lotto di messaggi IO con un messaggio di teto fisso, senza personalizzazioni.
 ## Il testo del messaggio è contenuto nella variaible "testoFisso", il titolo (oggetto) del messaggio nella varibiale "titolo".
 ## L'elenco dei codici fiscali a cui inviare è contenuto in un csv (nome di default listaCF) con i codici fiscali in una colonna che verrà chiesto di individuare.
@@ -24,6 +9,7 @@
 ## Tutte le operazioni e le interazioni con le API di IO sono annotate nel log appIO.log
 ## Il log delle azioni del modulo requests (dialogo con web service remoto) sono annotate in apposito log nella cartella di lotto.
 
+## Il testo del messaggio IO è definito nella variabile "testoFisso"
 
 import preparaDati
 import parlaConIO
@@ -43,10 +29,8 @@ log.setLevel(logging.DEBUG)
 listaOK = preparaDati.listaOK ##risposte da interpretare come sì come risposta affermativa in caso di domanda posta dal programma
 data_lotto = preparaDati.timestamp()
 
-## ## ## ## TESTO E TITOLO DEL MESSAGGIO ## ## ## ##
 testoFisso = "Per semplificare il rapporto con i suoi cittadini, il Comune distribuisce gratuitamente una casella di posta elettronica certificata (PEC). \n \n [Prenota un appuntamento] (https://prenota.comune.rivoli.to.it/pec-gratuita-per-i-cittadini-rivolesi) in Comune per ottenere la tua. \n \n Ulteriori dettagli [sul sito web del Comune] (https://secure.comune.rivoli.to.it/jportal/sprweb/JPModulo.do?MVPG=SprProcedimentoVis&id=746&rv=0&idc=7)."
 titolo = "Richiedi la tua casella PEC gratuita"
-## ## ## ## -- -- --- -- -- -- -- -- -- ## ## ## ##
 
 ##propone lista di servizi io e annota la scelta
 print("Questi sono i servizi IO attualmente configurati per invio di testi fissi:")
@@ -69,6 +53,7 @@ else:
 path = preparaDati.crea_cartella(servizioIO, data_lotto) # crea la cartella di lavoro del lotto
 lottoLog = path + data_lotto + "-" + "Lotto.log"
 lottoJson = path + data_lotto + "-" + "Lotto.json"
+erroriCSV = path + data_lotto + "-" + "ErroriCSV.csv"
 risultatoCFJson = path + data_lotto + "-" + "RisultatoCF.json"
 esitoInviiJson = path + data_lotto + "-" + "EsitoInvii.json"
 requestsLog = path + data_lotto + "-" + "Requests.log"
@@ -122,8 +107,8 @@ else:
    stampa("Programma terminato.")
    exit()
 
-#sezione per l'elaborazione del CSV con i dati da processare e creazione di tabella e JSON
-tabellaDati = preparaDati.importa_da_csv(nomeFileDati)
+#sezione per l'elaborazione del CSV con i dati da processare e creazione di tabella, JSON dei dati e csv con eventuali righe del csv originario con errori
+(tabellaDati, tabellaErrori, righeErrori) = preparaDati.importa_da_csv(nomeFileDati)
 if tabellaDati==[]:
     print("niente da elaborare, ciao.")
     q = input("Premi INVIO/ENTER per terminare.")
@@ -131,6 +116,16 @@ if tabellaDati==[]:
     exit()
 else:
    chiaviCSV = list(tabellaDati[0].keys())
+preparaDati.esporta_json(tabellaDati, lottoJson, data_lotto)
+stampa("CSV elaborato. Il file JSON " + lottoJson +" contiene i dati estratti.")
+
+if len(tabellaErrori) > 1:
+   preparaDati.esporta_csv(tabellaErrori, erroriCSV, data_lotto)
+   stampa("ATTENZIONE: il CSV contiene almeno una riga con errori. Ho ignorato queste righe e le ho raccolte nel file " + erroriCSV + ".")
+   stampa("Le righe del CSV con errori sono le seguenti: " + str(righeErrori))
+   q = input("Premi INVIO/ENTER per proseguire")
+
+##sezione per individuare la colonna del CSV con il codice fiscale
 print("Il CSV importato ha le seguenti chiavi:")
 for i in chiaviCSV:
    print(i)
@@ -138,9 +133,7 @@ chiaveCF = input("Indicare la chiave che contiene il codice fiscale: ")
 while not chiaveCF in chiaviCSV:
    chiaveCF = input("Indicare la chiave che contiene il codice fiscale: ")
 
-preparaDati.esporta_json(tabellaDati, lottoJson, data_lotto)
 
-stampa("CSV elaborato. Il file JSON " + lottoJson +" contiene i dati estratti.")
 
 #sezione per controllo testo fisso da inviare
 stampa("In base alle configurazioni attuali sarà inviato il seguente messaggio:")
@@ -170,7 +163,8 @@ dizionarioCodiciFiscaliUtenti={} #serve per eliminare i codici fiscali presenti 
 
 for riga in tabellaDati:
     cf = riga[chiaveCF]
-    dizionarioCodiciFiscaliUtenti[cf]=""
+    if cf:
+      dizionarioCodiciFiscaliUtenti[cf]=""
 
 listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 
@@ -201,6 +195,9 @@ invii = []
 if len(risultato["iscritti"]) == 0:
     stampa("Nessun messaggio da inviare, ciao.")
     invii = ["Nessun messaggio inviato."] #migliorare, perche' cosi' ho un json non omogeneo con gli altri
+    preparaDati.esporta_json(invii, esitoInviiJson, data_lotto)
+    q = input("Premi INVIO/ENTER per terminare")
+    exit()
 else:
     for riga in tabellaDati:
         if riga[chiaveCF] in risultato["iscritti"]:
