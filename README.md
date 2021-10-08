@@ -37,3 +37,9 @@ Il progetto è ideato e mantenuto dal Comune di Rivoli, Servzio SIA (Sistemi Inf
 - **serviziDiIncasso.py**: contiene le scioglimento dei codici dei servizi di incasso presenti nell'implementazione PagoPA dell'ente
   
 **FILE CSV DI PROVA**: Sono presenti alcuni file CSV di prova con codici fiscali fittizi, alcuni riconosciuti validi da IO e utilizzabili per test (es.: AAAAAA00A00A000A)
+
+**\*\*\*\*SPAZI DI DISCUSSIONE\*\*\***
+
+  Si invita a lasciare un saluto o un commento nel **[Libro degli ospiti](https://github.com/franthemanIT/parlaConIO/issues/4#issue-1021050208):** sono particolarmente graditi commenti, impressioni e suggerimenti da parte di chi opera all'interno della pubblica amministrazione e si trova ad affrontare l'integrazione di app IO nella propria organizzazione ma anche di chi opera nel settore a livello professionale.
+ 
+  E' inoltre attiva una discussione su **[forum.italita.it](https://forum.italia.it/t/parlaconio-uno-strumento-per-interagire-e-inviare-messaggi-su-app-io/26469)**.
