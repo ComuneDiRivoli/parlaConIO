@@ -1,6 +1,10 @@
 # parlaConIO
 Inviare messaggi tramite app IO a partire da dati contenuti in file .csv
 
+**--> Nessun obbligo, ma in caso di clonazione o uso del programma ci farebbe piacere che lasciaste due righe nel [Libro degli ospiti](https://github.com/franthemanIT/parlaConIO/issues/4#issue-1021050208) o su [forum.italia.it](https://forum.italia.it/t/parlaconio-uno-strumento-per-interagire-e-inviare-messaggi-su-app-io/26469)  <--**
+
+**--> L'uso di parlaConIO è "a rischio e pericolo" di chi lo esegue, non possiamo fornire alcuna garanzia. <--**
+
 Script Python per inviare messaggi verso l'app IO partendo da dati contenuti in file CSV
 
 Il progetto comprende degli script Python per **inviare messaggi verso l'app IO a partire da dati contenuti in file CSV**, tipicamente estratti dai software gestionali in uso presso le amministrazioni. Gli script funzionano da riga di comando e dovrebbero essere indipendenti dal sistema operativo in uso (Windows, Linux).
@@ -42,4 +46,4 @@ Il progetto è ideato e mantenuto dal Comune di Rivoli, Servzio SIA (Sistemi Inf
 
   Si invita a lasciare un saluto o un commento nel **[Libro degli ospiti](https://github.com/franthemanIT/parlaConIO/issues/4#issue-1021050208):** sono particolarmente graditi commenti, impressioni e suggerimenti da parte di chi opera all'interno della pubblica amministrazione e si trova ad affrontare l'integrazione di app IO nella propria organizzazione ma anche di chi opera nel settore a livello professionale.
  
-  E' inoltre attiva una discussione su **[forum.italita.it](https://forum.italia.it/t/parlaconio-uno-strumento-per-interagire-e-inviare-messaggi-su-app-io/26469)**.
+  E' inoltre attiva una discussione su **[forum.italia.it](https://forum.italia.it/t/parlaconio-uno-strumento-per-interagire-e-inviare-messaggi-su-app-io/26469)**.
