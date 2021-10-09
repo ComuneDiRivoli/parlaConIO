@@ -20,7 +20,9 @@
 ## causale: causale completa
 ## codiceidentificativoPagatore: codice fiscale del debitore
 ## identificativoServizio: codice identificativo del servizio di incasso
-## il codice identificativo del servizo di di incasso è sciolto nella sua denominazione completa tramite il file serviziDiIncasso.py## Il file CSV con i dati è passato come argomento da linea di comando
+## dataScadenza: data di scadenza dell'avviso
+## il codice identificativo del servizo di di incasso è sciolto nella sua denominazione completa tramite il file serviziDiIncasso.py
+## Il file CSV con i dati è passato come argomento da linea di comando
 ## Il programma guida attraverso i seguenti passaggi:
 ## 1. converte CSV in tabella di lavoro e crea un JSON con gli stessi dati (TIMESTAMP - Lotto)
 ## 2. controlla lo stato di sottoscrizione dei codici fiscali presenti nel CSV e crea tabella di alvoro e JSON con 4 liste: iscritti, non iscritti, senza IO, non verificabili. Crea un JSON con il riusltato dell'interrogazione (TIMESTAMP - RisultatoCF)
@@ -231,7 +233,7 @@ if len(risultato["iscritti"]) == 0:
     exit()
 else:
     for riga in tabellaDati:
-        if riga["codiceidentificativoPagatore"] in risultato["iscritti"]:
+        if riga[corrispondenze["codiceFiscale"]] in risultato["iscritti"]:
             parametri = {}
             for i in argomenti:
                parametri[i] = riga[corrispondenze[i]]
