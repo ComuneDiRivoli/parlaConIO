@@ -34,6 +34,7 @@ import parlaConIO
 import serviziIO
 import csv
 import sys
+import time
 import os.path
 import os
 
@@ -59,6 +60,7 @@ lottoJson = path + data_lotto + "-" + "Lotto.json"
 erroriCSV = path + data_lotto + "-" + "ErroriCSV.csv"
 risultatoCFJson = path + data_lotto + "-" + "RisultatoCF.json"
 esitoInviiJson = path + data_lotto + "-" + "EsitoInvii.json"
+inviiNonElaborati = path + data_lotto + "-" + "messaggiNonElaborati.csv" #NEW
 requestsLog = path + data_lotto + "-" + "Requests.log"
 fh = logging.FileHandler(requestsLog)
 log.addHandler(fh)
@@ -183,8 +185,8 @@ for riga in tabellaDati:
    
 listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 
-risultato = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)
-    
+(risultato, codaNonElaborata) = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)  ##NEW
+
 stampa("Codici fiscali elaborati = "+str(len(listaCodiciFiscaliUtenti)))
 stampa("Utenti con app IO iscritti = "+str(len(risultato["iscritti"])))
 stampa("Utenti con app IO non iscritti = "+str(len(risultato["nonIscritti"])))
@@ -193,6 +195,11 @@ stampa("Errori di interrogazione = "+str(len(risultato["inErrore"])))
 stampa("Trovi il risultato dell'interrogazione delle iscrizioni al servizio nel file JSON " + risultatoCFJson + ".")
 
 preparaDati.esporta_json(risultato, risultatoCFJson, data_lotto)
+
+if codaNonElaborata:  ##NEW
+   stampa("ATTENZIONE: l'interrogazione si è interrotta per sovraccarico del server IO.")
+   stampa("Non è possibile proseguire. Riprova più tardi.")
+   preparaDati.termina()
 
 ## Invio dei messaggi
 prosegui = ''
@@ -206,44 +213,84 @@ else:
    stampa("Programma terminato.")
    exit()
 
-## sezione per invio dei messaggi verso i codici fiscali iscritti al servizio IO
 invii = []
+
+# togliere il commento da queste righe se si vuole fare un test offline
+# risultato["iscritti"].append("AAAAAA00A00A000A")
+# risultato["iscritti"].append("AAA")
+
 
 if len(risultato["iscritti"]) == 0:
     stampa("Nessun messaggio da inviare, ciao.")
     invii = ["Nessun messaggio inviato."] #migliorare, perche' cosi' ho un json non omogeneo con gli altri
     preparaDati.esporta_json(invii, esitoInviiJson, data_lotto)
-    q = input("Premi INVIO/ENTER per terminare")
-    exit()
+    preparaDati.termina()
 else:
+    t = 0 #pausa iniziale fra due iterazioni
+    tmax = 0.2 #limite massimo della pausa fra due iterazioni raggiunto il quale si abbandona l'interrogazione
+    passo = 0.1 #incremento della pausa fra due iterazioni a ogni errore
+    pausa = 3 #pausa una tantum in seguito a errore per server sovraccarico
+    datiInCoda = [] #lista vuoto per raccogliere la coda di tabellaDati eventualmente non elaborata
     for riga in tabellaDati:
-        if riga["codiceFiscale"] in risultato["iscritti"]:
-            parametri = {}
-            for i in argomenti:
-               parametri[i] = riga[corrispondenze[i]]
-            payload = crea(**parametri)
-            timestamp_submit=preparaDati.timestamp()
-            messaggio = parlaConIO.submitMessage(riga[corrispondenze["codiceFiscale"]], servizioIO, payload)
-            print(payload)
-            print(messaggio)
-            invio={}
-            invio["timestamp"]=str(timestamp_submit)
-            invio["dataLotto"]=data_lotto
-            invio["servizioIO"]=servizioIO
-            invio["codiceFiscale"]=riga[corrispondenze["codiceFiscale"]]
-            invio["testo"]=payload
-            invio["status_code"]=messaggio.status_code
-            if messaggio.status_code == 201:
-               invio["esito"] = "Accettato"
-               invio["id"] = messaggio.json()["id"]
-            else:
-               invio["esito"] = "Non accettato"
-               invio["motivo"] = messaggio.json()["title"]
-            invii.append(invio)
-        else:
-            print("utente non iscritto")
-
-preparaDati.esporta_json(invii, esitoInviiJson, data_lotto)
+        inviato = False
+        while not inviato:
+           if t >= tmax:
+                stampa("Il sistema è sovraccarico, interrompo l'invio dei messaggi.")
+                datiInCoda = tabellaDati[tabellaDati.index(riga):]
+                stampa("Nella cartella di lotto trovi il file " + inviiNonElaborati + " da usare per completare l'invio.")
+                messaggiInCoda=[]
+                messaggiInCoda.append(etichetteCSV)
+                for i in datiInCoda:
+                   messaggioInCoda = i.values()
+                   messaggiInCoda.append(messaggioInCoda)
+                preparaDati.esporta_csv(messaggiInCoda, inviiNonElaborati, data_lotto)
+                if invii:
+                   stampa("Invio del lotto di messaggi interrotto prima del termine.")
+                   stampa("Invii tentati: " + str(len(invii)) + ".")
+                   a = sum([1 for i in invii if i["status_code"] == 201])
+                   stampa("Invii accettati: " + str(a) + ".")
+                   stampa("Consulta il file JSON " + esitoInviiJson + " per i dettagli dei singoli invii.")
+                   preparaDati.esporta_json(invii, esitoInviiJson, data_lotto)
+                else:
+                   stampa("Nessun messaggio inviato.")
+                   invii = ["Nessun messaggio inviato."] #migliorare, perche' cosi' ho un json non omogeneo con gli altri
+                   preparaDati.esporta_json(invii, esitoInviiJson, data_lotto)
+                preparaDati.termina()
+           else:
+              if riga[corrispondenze["codiceFiscale"]] in risultato["iscritti"]:
+                  time.sleep(t)
+                  parametri = {}
+                  for i in argomenti:
+                     parametri[i] = riga[corrispondenze[i]]
+                  payload = crea(**parametri)
+                  timestamp_submit=preparaDati.timestamp()
+                  messaggio = parlaConIO.submitMessage(riga[corrispondenze["codiceFiscale"]], servizioIO, payload)
+                  print(payload)
+                  # print(messaggio)
+                  invio={}
+                  invio["timestamp"]=str(timestamp_submit)
+                  invio["dataLotto"]=data_lotto
+                  invio["servizioIO"]=servizioIO
+                  invio["codiceFiscale"]=riga[corrispondenze["codiceFiscale"]]
+                  invio["testo"]=payload
+                  invio["status_code"]=messaggio.status_code
+                  if messaggio.status_code == 201:
+                     invio["esito"] = "Accettato"
+                     invio["id"] = messaggio.json()["id"]
+                     invii.append(invio)
+                     inviato = True
+                  elif messaggio.status_code == 429:  ## 429 è lo status code del sovraccarico del server IO
+                     print("Il server IO è sovraccarico, attendo e inserisco una pausa fra le prossime richieste.")
+                     t += passo
+                     time.sleep(pausa)
+                  else:
+                     invio["esito"] = "Non accettato"
+                     invio["motivo"] = messaggio.json()["title"]
+                     invii.append(invio)
+                     inviato = True
+              else:
+                  print("utente non iscritto")
+                  inviato = True
     
 stampa("Invio del lotto di messaggi terminato.")
 stampa("Invii tentati: " + str(len(invii)) + ".")
@@ -251,5 +298,8 @@ a = sum([1 for i in invii if i["status_code"] == 201])
 stampa("Invii accettati: " + str(a) + ".")
 stampa("Consulta il file JSON " + esitoInviiJson + " per i dettagli dei singoli invii.")
 
+if invii: ##NEW
+   preparaDati.esporta_json(invii, esitoInviiJson, data_lotto)
+   
 q = input("Premi INVIO/ENTER per terminare")
 exit()
