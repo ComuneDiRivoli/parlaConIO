@@ -127,3 +127,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# parlaConIO input files
+*.csv
+
+# parlaConIO config files (use "RIMUOVIMI" version for a template)
+serviziDiIncasso.py
+serviziIO.py
+
+# cartelle di lotto
+202*/
+
+# documentation ODT files
+*.odt
