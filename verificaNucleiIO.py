@@ -186,9 +186,8 @@ stampa("Trovi il risultato dell'interrogazione delle iscrizioni al servizio nel 
 if codaNonElaborata:
    stampa("Codici fiscali non elaborati = "+str(len(codaNonElaborata)))
    stampa("Trovi i codici fiscali non elaborati nel file " + nonElaborati + ".")
-
+   preparaDati.esporta_lista_csv(codaNonElaborata, chiaveCF, nonElaborati, data_lotto)
 preparaDati.esporta_json(risultato, risultatoCFJson, data_lotto)
-preparaDati.esporta_lista_csv(codaNonElaborata, chiaveCF, nonElaborati, data_lotto)
 
 
 ## sezione per il controllo (offline) sui nuceli familiare
