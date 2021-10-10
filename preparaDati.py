@@ -27,6 +27,22 @@ import serviziDiIncasso
 
 listaOK = ["sì", "SI", "S", "s", "Sì", "OK", "si"] # elenco di parola da interpretare come risposta affermativa in caso di domanda posta dal programma
 
+def attendi():
+    q = input("Premi INVIO/ENTER per proseguire.")
+
+def termina():
+    q = input("Premi INVIO/ENTER per terminare.")
+    exit()
+
+def scegli(domanda):
+    q = input(domanda)
+    if q in listaOK:
+        risposta = True
+    else:
+        risposta = False
+    return risposta
+    
+   
 def timestamp(): #definisco il timestamp da inserire nei log
     return datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
 
@@ -71,11 +87,13 @@ def crea_cartella(suffisso, dataeora=""): # crea cartella con nome "dataeora-suf
 ##    with open(x + "-" + nomefile+".json", 'w+') as file:
 ##        file.write(json.dumps(tabella, sort_keys=False, indent=4))
 
+##funzione per esportare una lista di dizionari in file JSON
 def esporta_json(tabella, destinazione, dataeora=""): # destinazione è il percorso completo del file
     #x = timestamp() if dataeora=="" else dataeora
     with open(destinazione, 'w+') as file:
         file.write(json.dumps(tabella, sort_keys=False, indent=4))
 
+## funzione per esportae una lista di liste (tabella) in csv
 def esporta_csv(tabella, destinazione, dataeora=""): # destinazione è il percorso completo del file
     #x = timestamp() if dataeora=="" else dataeora
     with open(destinazione, 'w', newline='') as file:
@@ -84,7 +102,15 @@ def esporta_csv(tabella, destinazione, dataeora=""): # destinazione è il percor
             erroriwriter.writerow(tabella[i])
             #file.write(";".join(tabella[i]))
             #file.write("\n")
-            
+
+## funzione per esporta una lista semplice in file csv con una solo colonna e etichetta "primariga"
+def esporta_lista_csv(lista, primariga, destinazione, dataeora=""): # destinazione è il percorso completo del file
+    with open(destinazione, 'w', newline='') as file:
+        file.write(primariga)
+        file.write("\n")
+        for i in lista:
+            file.write(i)
+            file.write("\n")
                 
 ## la funzione "mappa" consente di associare i valori della lista "argomenti" a quelli della lista "etichette"
 ## serve per indicare quali colonne di un CSV di dati in input sono da usare come argomenti della funzione che crea il body del messaggio da inviare
@@ -139,7 +165,7 @@ def recuperaArgomenti(funzione): #crea lista di argomenti con keyword attesi da 
 ## attenzione alle interruzioni di riga: si ottengono con doppio spazio seguito da interruzione di linea. Esempio. "Riga di testo dopo la quale andare a capo.  " + "\n"
 ## Il nuovo paragrafo (con linea vuota) si ottiene con '\n \n' nella stringa.
 def crea_body(nome_servizio, causale, importo, codice_avviso, scadenza, email, codiceFiscale):
-    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio "+nome_servizio+",\n \n Causale: "+causale+"\n \nImporto: "+str(importo)+"\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto.  \n  \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://portale.comune.rivoli.to.it) sul sito del Comune di Rivoli. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
+    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio "+nome_servizio+",\n \n Causale: "+causale+"\n \nImporto: "+str(importo)+"\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto.  \n  \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://LINKPORTALEPAGAMENTI) sul sito del Comune di NOMECOMUNE. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
     payment_data={}
     payment_data["amount"] = int(float(importo)*100)
     payment_data["notice_number"] = "3"+codice_avviso
@@ -158,7 +184,7 @@ def crea_body_avviso_pagamento(codice_servizio_incasso, causale, importo, codice
         nome_servizio = str(serviziDiIncasso.serviziDiIncasso[codice_servizio_incasso]["nome"])
     else:
         nome_servizio = "---"
-    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio **"+nome_servizio+"**,  " + "\n" + "**Causale**: " + causale + "  " + "\n" + "**Importo**: euro " + str(importo) + "\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto. \n \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://portale.comune.rivoli.to.it) sul sito del Comune di Rivoli. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
+    markdown = "Ti informiamo che è stato emesso un avviso di pagamento a tuo nome per il servizio **"+nome_servizio+"**,  " + "\n" + "**Causale**: " + causale + "  " + "\n" + "**Importo**: euro " + str(importo) + "\n \nPuoi procedere al pagamento dell’avviso direttamente dalla app IO con l'apposito tasto. \n \nIn alternativa, puoi pagare o scaricare l’avviso in formato PDF per il pagamento sul territorio nella pagina [Pagamenti Online](https://LINKPORTALEPAGAMENTI) sul sito del Comune di NOMECOMUNE. Da lì potrai visualizzare anche lo storico dei tuoi pagamenti verso il Comune e prelevare le ricevute."
     payment_data={}
     payment_data["amount"] = int(float(importo)*100)
     payment_data["notice_number"] = str(codice_avviso)
@@ -171,7 +197,7 @@ def crea_body_avviso_pagamento(codice_servizio_incasso, causale, importo, codice
 
 ## creazione di un messaggio per promemoria scadenza carta di identità a partire da csv con colonna codiceFiscale e dataScadenzaDocumento
 def crea_body_scadenzaCI(dataScadenzaDocumento, codiceFiscale):
-    markdown = "Ti informiamo che **la tua carta di identità scade il giorno " + dataScadenzaDocumento + "**. Puoi prenotare l'appuntamento per l'emissione di una nuova carta d'identità elettronica utlizzando il servizio online [Prenota un appuntamento](https://prenota.comune.rivoli.to.it/anagrafe-e-stato-civile/18/calendar) sul sito del Comune di Rivoli."
+    markdown = "Ti informiamo che **la tua carta di identità scade il giorno " + dataScadenzaDocumento + "**. Puoi prenotare l'appuntamento per l'emissione di una nuova carta d'identità elettronica utlizzando il servizio online [Prenota un appuntamento](https://LINKAGENDA) sul sito del Comune di NOMECOMUNE."
     body={}
     body["time_to_live"] = 3600
     body["content"] = {"subject": "TEST - La tua carta di identità scade a breve", "markdown": markdown}

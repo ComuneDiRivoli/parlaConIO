@@ -29,6 +29,10 @@
 ## Tutte le operazioni e le interazioni con le API di IO sono annotate nel log appIO.
 ## Il log delle azioni del modulo requests (dialogo con web service remoto) sono annotate in apposito log nella cartella di lotto.
 
+
+## ATTENZIONE: in caso di interruzione del controllo dei codici fiscali per sovraccarico dei server IO:
+## *********** portare a termine il programma non fornisce risultati veritieri. Si consiglia di eseguirlo di nuovo in un secondo momento
+
 import preparaDati
 import parlaConIO
 import serviziIO
@@ -70,6 +74,7 @@ lottoLog = path + data_lotto + "-" + "Lotto.log"
 #lottoJson = path + data_lotto + "-" + "Lotto.json"
 erroriCSV = path + data_lotto + "-" + "ErroriCSV.csv"
 risultatoCFJson = path + data_lotto + "-" + "RisultatoCF.json"
+nonElaborati = path + data_lotto + "-" + "datiNonElaborati.csv"
 risultatoNucleiJson = path + data_lotto + "-" + "RisultatoNuclei.json"
 requestsLog = path + data_lotto + "-" + "Requests.log"
 fh = logging.FileHandler(requestsLog)
@@ -168,20 +173,36 @@ for riga in tabellaDati:
 
 listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 
-risultato = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)
-    
-stampa("Codici fiscali elaborati = "+str(len(listaCodiciFiscaliUtenti)))
+(risultato, codaNonElaborata) = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)
+
+if codaNonElaborata:
+   stampa("ATTENZIONE: l'interrogazione si è interrotta per sovraccarico del server IO")        
+stampa("Codici fiscali elaborati = "+str(len(listaCodiciFiscaliUtenti)-len(codaNonElaborata)))
 stampa("Utenti con app IO iscritti = "+str(len(risultato["iscritti"])))
 stampa("Utenti con app IO non iscritti = "+str(len(risultato["nonIscritti"])))
 stampa("Utenti senza app IO = "+str(len(risultato["senzaAppIO"])))
 stampa("Errori di interrogazione = "+str(len(risultato["inErrore"])))
 stampa("Trovi il risultato dell'interrogazione delle iscrizioni al servizio nel file JSON " + risultatoCFJson + ".")
-
+if codaNonElaborata:
+   stampa("Codici fiscali non elaborati = "+str(len(codaNonElaborata)))
+   stampa("Trovi i codici fiscali non elaborati nel file " + nonElaborati + ".")
+   preparaDati.esporta_lista_csv(codaNonElaborata, chiaveCF, nonElaborati, data_lotto)
 preparaDati.esporta_json(risultato, risultatoCFJson, data_lotto)
 
 
 ## sezione per il controllo (offline) sui nuceli familiare
 stampa("Eseguo il controllo sui nuclei familiari.")
+if codaNonElaborata:
+   stampa("ATTENZIONE: la verifica dello stato di iscrizione dei codici fiscali inseriti non si è conclusa per sovraccarico del server IO.")
+   stampa("Se prosegui l'elaborazione della diffusione per nuclei familiari non è veritiera.")
+   stampa("Se decidi di proseguire dovrai analizzare ulteriormente i file nella cartella di lotto per un quadro esatto.")
+   scelta = preparaDati.scegli("Vuoi proseguire ugualmente con la verifica dei nuclei (Sì/No)? ")
+   if not scelta:
+      stampa("Hai scelto di non proseguire.")
+      preparaDati.termina()
+   else:
+      stampa("Hai scelto di proseguire ugualmente")      
+
 
 #compongo lista di nuclei senza ripetizioni
 dizNuclei = {}

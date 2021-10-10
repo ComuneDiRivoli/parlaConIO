@@ -1,25 +1,8 @@
-## 
-##  Copyright (C) 2021 Francesco Del Castillo - Comune di Rivoli
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU Affero General Public License as
-##  published by the Free Software Foundation, either version 3 of the
-##  License, or (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU Affero General Public License for more details.
-##
-##  You should have received a copy of the GNU Affero General Public License
-##  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
-
-## Definizione delle regole di interazione con le API di app IO (https://developer.io.italia.it/openapi.html)
-
-
 import requests
 import socket
 import datetime
 import json
+import time
 import os
 import serviziIO
 
@@ -110,26 +93,47 @@ def getMessage(codiceFiscale, message_id, servizioIO):
         return r
 
 def controllaCF(listaCF, servizioIO): ## definizione della funzione per controllare iscrizione di una lista di CF a un servizio
+    t = 0 #pausa iniziale fra due iterazioni
+    tmax = 0.2 #limite massimo della pausa fra due iterazioni raggiunto il quale si abbandona l'interrogazione
+    passo = 0.1 #incremento della pausa fra due iterazioni a ogni errore
+    pausa = 3 #pausa una tantum in seguito a errore per server sovraccarico 
     utentiIscritti=[]
     utentiNonIscritti=[]
     utentiSenzaAppIO=[]
     interrogazioniInErrore=[]
+    interrogazioniInCoda=[]
     contatore=1
     totale=len(listaCF)
     for cf in listaCF:
-        print(contatore,"di",totale)
-        risposta = getProfilePost(cf, servizioIO)
-        if risposta.status_code==200:
-            if risposta.json()["sender_allowed"]:
-                utentiIscritti.append(cf)
+        inviato = False
+        while not inviato:
+            if t >= tmax:
+                print("Il sistema è sovraccarico, interrompo l'interrogazione.")
+                interrogazioniInCoda = listaCF[listaCF.index(cf):]
+                return ({"iscritti":utentiIscritti, "nonIscritti":utentiNonIscritti, "senzaAppIO":utentiSenzaAppIO, "inErrore":interrogazioniInErrore}, interrogazioniInCoda)
             else:
-                utentiNonIscritti.append(cf)
-        else:
-            if risposta.status_code==404:
-                utentiSenzaAppIO.append(cf)
-            else:
-                interrogazioniInErrore.append(cf)
-        contatore=contatore+1
-    return {"iscritti":utentiIscritti, "nonIscritti":utentiNonIscritti, "senzaAppIO":utentiSenzaAppIO, "inErrore":interrogazioniInErrore}   
+                time.sleep(t)
+                print(contatore,"di",totale)
+                risposta = getProfilePost(cf, servizioIO)
+                if risposta.status_code == 200:
+                    if risposta.json()["sender_allowed"]:
+                        utentiIscritti.append(cf)
+                    else:
+                        utentiNonIscritti.append(cf)
+                    inviato =  True
+                    contatore += 1
+                elif risposta.status_code == 429:
+                    print("Il server IO è sovraccarico, attendo e inserisco una pausa fra le prossime richieste.")
+                    t += passo
+                    time.sleep(pausa)
+                else:
+                    if risposta.status_code == 404:
+                        utentiSenzaAppIO.append(cf)
+                    else:
+                        interrogazioniInErrore.append(cf)
+                    inviato = True
+                    contatore += 1
+            
+    return ({"iscritti":utentiIscritti, "nonIscritti":utentiNonIscritti, "senzaAppIO":utentiSenzaAppIO, "inErrore":interrogazioniInErrore}, interrogazioniInCoda)
     
 

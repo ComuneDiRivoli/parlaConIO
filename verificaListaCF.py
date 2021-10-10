@@ -67,6 +67,7 @@ lottoLog = path + data_lotto + "-" + "Lotto.log"
 erroriCSV = path + data_lotto + "-" + "ErroriCSV.csv"
 risultatoCFJson = path + data_lotto + "-" + "RisultatoCF.json"
 requestsLog = path + data_lotto + "-" + "Requests.log"
+nonElaborati = path + data_lotto + "-" + "datiNonElaborati.csv"
 fh = logging.FileHandler(requestsLog)
 log.addHandler(fh)
 
@@ -160,16 +161,23 @@ for riga in tabellaDati:
        dizionarioCodiciFiscaliUtenti[cf]=""
 listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 
-risultato = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)
-    
-stampa("Codici fiscali elaborati = "+str(len(listaCodiciFiscaliUtenti)))
+(risultato, codaNonElaborata) = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)
+
+if codaNonElaborata:
+   stampa("ATTENZIONE: l'interrogazione si è interrotta per sovraccarico del server IO.")    
+stampa("Codici fiscali elaborati = "+str(len(listaCodiciFiscaliUtenti)-len(codaNonElaborata)))
 stampa("Utenti con app IO iscritti = "+str(len(risultato["iscritti"])))
 stampa("Utenti con app IO non iscritti = "+str(len(risultato["nonIscritti"])))
 stampa("Utenti senza app IO = "+str(len(risultato["senzaAppIO"])))
 stampa("Errori di interrogazione = "+str(len(risultato["inErrore"])))
 stampa("Trovi il risultato dell'interrogazione delle iscrizioni al servizio nel file JSON " + risultatoCFJson + ".")
-
+if codaNonElaborata:
+   stampa("Codici fiscali non elaborati = "+str(len(codaNonElaborata)))
+   stampa("Trovi i codici fiscali non elaborati nel file " + nonElaborati + ".")
+   stampa("Per completare l'interrogazione esegui nuovamente il programma con quel file come input.")
+   
 preparaDati.esporta_json(risultato, risultatoCFJson, data_lotto)
+preparaDati.esporta_lista_csv(codaNonElaborata, chiaveCF, nonElaborati, data_lotto)
 
 q = input("Premi INVIO/ENTER per terminare")
 exit()
