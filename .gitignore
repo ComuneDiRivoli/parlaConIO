@@ -135,8 +135,9 @@ dmypy.json
 serviziDiIncasso.py
 serviziIO.py
 
-# cartelle di lotto
+# cartelle di lotto e log
 202*/
+appIO.log
 
 # documentation ODT files
 *.odt
