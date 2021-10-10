@@ -175,9 +175,8 @@ if codaNonElaborata:
    stampa("Codici fiscali non elaborati = "+str(len(codaNonElaborata)))
    stampa("Trovi i codici fiscali non elaborati nel file " + nonElaborati + ".")
    stampa("Per completare l'interrogazione esegui nuovamente il programma con quel file come input.")
-   
+   preparaDati.esporta_lista_csv(codaNonElaborata, chiaveCF, nonElaborati, data_lotto)
 preparaDati.esporta_json(risultato, risultatoCFJson, data_lotto)
-preparaDati.esporta_lista_csv(codaNonElaborata, chiaveCF, nonElaborati, data_lotto)
 
 q = input("Premi INVIO/ENTER per terminare")
 exit()
