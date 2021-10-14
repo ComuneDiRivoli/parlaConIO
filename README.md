@@ -18,6 +18,7 @@ Per utilizzare gli script è necessario:
 - rimuovere la parte "RIMUOVIMI." dove presente nei nomi dei file;
 - personalizzare i file di configurazione (principalmente quelli appena rinominati);
 - gli script si lanciano da riga di comando, tipicamente indicando come argomento il file CSV da elaborare. In assenza di argomento o in caso di argomento errato, lo script guida l'utente alla sua corretta invocazione.\
+
 I CSV proposti come modello e le regole per interpretarli al fine di comporre i messaggi (payload dell'interrogazione delle API di IO) sono modellati sulle esigenze del Comune di Rivoli. Tuttavia **è possibile modificare le regole di composizione dei messaggi intervenendo sulle funzioni definite preparaDati.py e/o negli script "inviaLotto\*"**. L'ordine delle chiavi nei file CSV non è vincolante e le chiavi necessarie alla composizione del messaggio possono coesistere con altre.
 
 Gli script sono migliorabili e in evoluzione. Al momento mancano meccanismi per la gestione efficiente delle eccezioni durante il dialogo con le API di IO. Per esempio, in caso di mancanza di collegamento di rete, il modulo requests restituisce un'eccezione che causa l'interruzione del programma. In tal caso è necessario interrogare i log per capire se e quali messaggi sono stati inviati, eliminare le relative righe dal CSV e lanciare nuovamente lo script di invio. Un evento del genere non consente nemmeno la corretta verifica dello stato di consegna dei messaggi inviati prima dell'interruzione del programma.
