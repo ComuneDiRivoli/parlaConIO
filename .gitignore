@@ -134,6 +134,8 @@ dmypy.json
 # parlaConIO config files (use "RIMUOVIMI" version for a template)
 serviziDiIncasso.py
 serviziIO.py
+preparaDati.py
+inviaLottoNotizie.py
 
 # cartelle di lotto e log
 202*/
