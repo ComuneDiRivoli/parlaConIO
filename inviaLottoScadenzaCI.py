@@ -138,8 +138,10 @@ if (argomentiDiDefault == argomenti and set(etichetteDiDefault) <= set(etichette
    stampa("Corrispondenze argomenti-CSV assenti o non valide.")
    corrispondenze = preparaDati.mappa(argomenti,etichetteCSV)
 else:
+   stampa("------------")
    stampa("Ho individuato le seguenti corrispondenze:")
    stampa(str(corrispondenzeDiDefault))
+   stampa("------------")
    e = input("Confermi le corrispondenze (Sì/No)? ")
    if e in listaOK:
       stampa("Corrispondenze confermate.")
@@ -151,11 +153,14 @@ rigaDiEsempio = tabellaDati[0]
 parametriDiEsempio = {}
 for i in argomenti:
    parametriDiEsempio[i]=rigaDiEsempio[corrispondenze[i]]
+stampa("------------")
 stampa("In base alle tue indicazioni, ho individuato le corrispondenze come nel seguente esempio:")
 stampa(str(parametriDiEsempio))
+stampa("------------")
 payloadDiEsempio = crea(**parametriDiEsempio)
 stampa("In base alle tue indicazioni, il messaggio risulta formato come segue:")
 stampa(str(payloadDiEsempio))
+stampa("------------")
 approva = input("Confermi le tue scelte (Sì/No)? ")
 if approva not in listaOK:
    stampa("Messaggio di esempio non conforme alle aspettative. Ripeti la procedura.")
@@ -187,12 +192,14 @@ listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 
 (risultato, codaNonElaborata) = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)  ##NEW
 
+stampa("------------")
 stampa("Codici fiscali elaborati = "+str(len(listaCodiciFiscaliUtenti)))
 stampa("Utenti con app IO iscritti = "+str(len(risultato["iscritti"])))
 stampa("Utenti con app IO non iscritti = "+str(len(risultato["nonIscritti"])))
 stampa("Utenti senza app IO = "+str(len(risultato["senzaAppIO"])))
 stampa("Errori di interrogazione = "+str(len(risultato["inErrore"])))
 stampa("Trovi il risultato dell'interrogazione delle iscrizioni al servizio nel file JSON " + risultatoCFJson + ".")
+stampa("------------")
 
 preparaDati.esporta_json(risultato, risultatoCFJson, data_lotto)
 
