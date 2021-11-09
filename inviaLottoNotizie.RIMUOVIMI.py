@@ -50,9 +50,11 @@ titolo = "Richiedi la tua casella PEC gratuita"
  ## ## ## ## -- -- --- -- -- -- -- -- -- ## ## ## ##
 
 ##propone lista di servizi io e annota la scelta
+print("------------")
 print("Questi sono i servizi IO attualmente configurati per invio di testi fissi:")
 for chiave in serviziIO.elencoServiziIOTestoFisso:
    print(chiave, ":", serviziIO.serviziIO[chiave]["nome"])
+print("------------")
 servizio = input("Quale servizio IO vuoi utilizzare? Indica il codice fra quelli elencati sopra: ")
 if servizio in serviziIO.elencoServiziIOTestoFisso:
    servizioIO=servizio
@@ -144,9 +146,11 @@ if len(tabellaErrori) > 1:
    q = input("Premi INVIO/ENTER per proseguire")
 
 ##sezione per individuare la colonna del CSV con il codice fiscale
+print("------------")
 print("Il CSV importato ha le seguenti chiavi:")
 for i in chiaviCSV:
    print(i)
+print("------------")
 chiaveCF = input("Indicare la chiave che contiene il codice fiscale: ")
 while not chiaveCF in chiaviCSV:
    chiaveCF = input("Indicare la chiave che contiene il codice fiscale: ")
@@ -154,9 +158,11 @@ while not chiaveCF in chiaviCSV:
 
 
 #sezione per controllo testo fisso da inviare
+stampa("------------")
 stampa("In base alle configurazioni attuali sarà inviato il seguente messaggio:")
 stampa("TITOLO: " + titolo)
 stampa("TESTO: " + testoFisso)
+stampa("------------")
 approva = input("Confermi il messaggio (Sì/No)? ")
 if approva not in listaOK:
    stampa("Messaggio  non conforme alle aspettative. Ripeti la procedura.")
@@ -188,12 +194,14 @@ listaCodiciFiscaliUtenti = list(dizionarioCodiciFiscaliUtenti.keys())
 
 (risultato, codaNonElaborata) = parlaConIO.controllaCF(listaCodiciFiscaliUtenti, servizioIO)
     
+stampa("------------")
 stampa("Codici fiscali elaborati = "+str(len(listaCodiciFiscaliUtenti)))
 stampa("Utenti con app IO iscritti = "+str(len(risultato["iscritti"])))
 stampa("Utenti con app IO non iscritti = "+str(len(risultato["nonIscritti"])))
 stampa("Utenti senza app IO = "+str(len(risultato["senzaAppIO"])))
 stampa("Errori di interrogazione = "+str(len(risultato["inErrore"])))
 stampa("Trovi il risultato dell'interrogazione delle iscrizioni al servizio nel file JSON " + risultatoCFJson + ".")
+stampa("------------")
 
 preparaDati.esporta_json(risultato, risultatoCFJson, data_lotto)
 
