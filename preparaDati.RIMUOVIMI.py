@@ -171,7 +171,7 @@ def crea_body(nome_servizio, causale, importo, codice_avviso, scadenza, email, c
     payment_data["notice_number"] = "3"+codice_avviso
     payment_data["invalid_after_due_date"] = False
     body={}
-    body["time_to_live"] = 3600
+    #body["time_to_live"] = 3600    #deprecato secondo la guida tecnica all'integrazione di IO v. 1.1. del 29/07/2021
     body["content"] = {"subject":"Avviso di pagamento", "markdown":markdown, "payment_data":payment_data, "due_date": str(data(scadenza))}
     # body["default_addresses"]={"email":email}
     body["fiscal_code"]=codiceFiscale
@@ -190,7 +190,7 @@ def crea_body_avviso_pagamento(codice_servizio_incasso, causale, importo, codice
     payment_data["notice_number"] = str(codice_avviso)
     payment_data["invalid_after_due_date"] = False
     body={}
-    body["time_to_live"] = 3600
+    #body["time_to_live"] = 3600    #deprecato secondo la guida tecnica all'integrazione di IO v. 1.1. del 29/07/2021
     body["content"] = {"subject":"TEST - Avviso di pagamento", "markdown":markdown, "payment_data":payment_data, "due_date": str(data(scadenza))}
     body["fiscal_code"]=codiceFiscale
     return body
@@ -199,7 +199,7 @@ def crea_body_avviso_pagamento(codice_servizio_incasso, causale, importo, codice
 def crea_body_scadenzaCI(dataScadenzaDocumento, codiceFiscale):
     markdown = "Ti informiamo che **la tua carta di identità scade il giorno " + dataScadenzaDocumento + "**. Puoi prenotare l'appuntamento per l'emissione di una nuova carta d'identità elettronica utlizzando il servizio online [Prenota un appuntamento](https://LINKAGENDA) sul sito del Comune di NOMECOMUNE."
     body={}
-    body["time_to_live"] = 3600
+    #body["time_to_live"] = 3600    #deprecato secondo la guida tecnica all'integrazione di IO v. 1.1. del 29/07/2021
     body["content"] = {"subject": "TEST - La tua carta di identità scade a breve", "markdown": markdown}
     body["fiscal_code"]=codiceFiscale
     return body
@@ -207,7 +207,7 @@ def crea_body_scadenzaCI(dataScadenzaDocumento, codiceFiscale):
 ## Creazione di un messaggio con testo fisso
 def crea_body_testoFisso(titolo, testoFisso, codiceFiscale):
     body={}
-    body["time_to_live"] = 3600
+    #body["time_to_live"] = 3600    #deprecato secondo la guida tecnica all'integrazione di IO v. 1.1. del 29/07/2021
     body["content"] = {"subject": titolo, "markdown": testoFisso}
     body["fiscal_code"] = codiceFiscale
     return body
