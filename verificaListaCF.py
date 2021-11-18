@@ -146,7 +146,7 @@ while not chiaveCF in chiaviCSV:
    chiaveCF = input("Indicare la chiave che contiene il codice fiscale: ")
 
 prosegui = input("Proseguo con il controllo dell'iscrizione degli utenti al servizio " + serviziIO.serviziIO[servizioIO]["nome"] +"? (Sì/No): ")
-if prosegui in listaOK == False:
+if prosegui not in listaOK:
    q = input("Premi INVIO/ENTER per terminare.")
    stampa("Programma terminato.")
    exit()
