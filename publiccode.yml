@@ -75,8 +75,7 @@ localisation:
   availableLanguages:
     - it
   localisationReady: false
-logo: |-
-  https://raw.githubusercontent.com/ComuneDiRivoli/parlaConIO/master/screenshots/logo.png
+logo: screenshots/logo.png
 maintenance:
   contacts:
     - affiliation: Comune di Rivoli
