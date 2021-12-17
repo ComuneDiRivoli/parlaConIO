@@ -45,12 +45,9 @@ description:
 
       messaggi ottenuti a partire da un file CSV con i dati). 
     screenshots:
-      - |-
-        screenshots/Esecuzione1.png
-      - |-
-        screenshots/Esecuzione2.png
-      - |-
-        screenshots/Screenshot.png
+      - screenshots/Esecuzione1.png
+      - screenshots/Esecuzione2.png
+      - screenshots/Screenshot.png
     shortDescription: Invio di messaggi tramite app IO a partire da dati contenuti in file .csv
 developmentStatus: beta
 inputTypes:
