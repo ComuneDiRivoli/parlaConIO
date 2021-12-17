@@ -56,6 +56,8 @@ intendedAudience:
     - local-authorities
     - education
 it:
+  riuso:
+    codiceIPA: c_h355
   conforme:
     gdpr: false
     lineeGuidaDesign: false
