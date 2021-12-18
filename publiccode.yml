@@ -27,23 +27,7 @@ description:
       - 'Installazione sostenibile: serve solo un PC con Python'
     genericName: API connector
     longDescription: |
-      Il software parlaConIO comprende degli script Python per **inviare
-
-      messaggi verso l'app IO a partire da dati contenuti in file CSV**, 
-
-      tipicamente estratti dai software gestionali in uso presso le 
-
-      amministrazioni. Gli script funzionano da riga di comando e dovrebbero 
-
-      essere indipendenti dal sistema operativo in uso (Windows, Linux). Le
-
-      operazioni di composizione e invio dei messaggi sono tracciate e 
-
-      memorizzate su log e file di report in formato testo o json. E' incluso 
-
-      anche uno script per la verifica dell'invio di un lotto (=blocco di 
-
-      messaggi ottenuti a partire da un file CSV con i dati). 
+      Il software parlaConIO comprende degli script Python per **inviare messaggi verso l'app IO a partire da dati contenuti in file CSV**, tipicamente estratti dai software gestionali in uso presso le amministrazioni. Gli script funzionano da riga di comando e dovrebbero essere indipendenti dal sistema operativo in uso (Windows, Linux). Le operazioni di composizione e invio dei messaggi sono tracciate e memorizzate su log e file di report in formato testo o json. E' incluso anche uno script per la verifica dell'invio di un lotto (=blocco di messaggi ottenuti a partire da un file CSV con i dati). 
     screenshots:
       - screenshots/xmas.png
       - screenshots/Screenshot.png
