@@ -81,7 +81,7 @@ outputTypes:
 platforms:
   - windows
   - linux
-releaseDate: '2021-11-29'
+releaseDate: '2021-12-18'
 softwareType: standalone/iot
 softwareVersion: '1.0'
 url: 'https://github.com/ComuneDiRivoli/parlaConIO'
