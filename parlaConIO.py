@@ -9,7 +9,7 @@ import serviziIO
 # import logging
 
 cftest="AAAAAA00A00A000A" ## codice fiscale di test in ambiente IO
-baseURL = "https://api.io.italia.it/api/v1" # url di base dei web service IO
+baseURL = "https://api.io.pagopa.it/api/v1" # url di base dei web service IO
 
 logFileName="appIO.log"
 
