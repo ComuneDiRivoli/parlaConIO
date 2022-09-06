@@ -51,7 +51,7 @@ corrispondenzeDiDefault = {'dataScadenzaDocumento': 'dataScadenzaDocumento', 'co
 data_lotto = preparaDati.timestamp()
 
 ## Selezione del servizio IO da utilizzare (qui fisso)
-servizioIO="SCI" ## codice del servizio IO come definito in parlaConIO.py
+servizioIO="SCI" ## codice del servizio IO come definito in serviziIO.py
 
 ## Inizializzazione di cartella di lotto, file di output e logging
 path = preparaDati.crea_cartella(servizioIO, data_lotto) # crea la cartella di lavoro del lotto
