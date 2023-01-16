@@ -60,7 +60,7 @@ if servizio in serviziIO.elencoServiziIOTestoFisso:
    servizioIO=servizio
 else:
    servizio = input("Servizio non valido, ritenta. Indica il codice fra quelli elencati sopra: ")
-   if servizio in serviziIO.elencoServiziIO:
+   if servizio in serviziIO.elencoServiziIOTestoFisso:
       servizioIO = servizio
    else:
       print("Servizio indicato non valido.")
