@@ -27,3 +27,14 @@ serviziIO["SCI"]["ID"]="xxxxxxxxxxxxxxxxxxxxxxxxxx"
 serviziIO["SCI"]["nome"]="Promemoria di scadenza della carta d'identità"
 serviziIO["SCI"]["pagabile"]="No"
 serviziIO["SCI"]["testoFisso"]="No"
+
+
+elencoServiziIO = list(serviziIO.keys())
+elencoServiziIOPagabili = []
+for i in elencoServiziIO:
+	if serviziIO[i]["pagabile"] == "Sì":
+		elencoServiziIOPagabili.append(i)
+elencoServiziIOTestoFisso = []
+for i in elencoServiziIO:
+	if serviziIO[i]["testoFisso"] == "Sì":
+		elencoServiziIOTestoFisso.append(i)
