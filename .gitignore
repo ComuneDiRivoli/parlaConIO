@@ -143,3 +143,7 @@ appIO.log
 
 # documentation ODT files
 *.odt
+
+#prove locali
+eccezioni.py
+parlaConIO - Copia.py
