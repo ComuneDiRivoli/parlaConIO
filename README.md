@@ -1,9 +1,14 @@
 # parlaConIO
 Inviare messaggi tramite app IO a partire da dati contenuti in file .csv
 
+**--> L'uso di parlaConIO è "a rischio e pericolo" di chi lo esegue, non possiamo fornire alcuna garanzia. <--**
+
+**--> parlaConIO è pensato per essere usato da riga di comando, come soluzione "stand-alone" a partire da file CSV di origine certa. <--**
+
+**--> Se hai intenzione di integrare questi script in qualche procedura più articolata e automatizzata devi prendere le dovute cautele (ma del resto lo sai, se sei uno sviluppatore navigato) <--**
+
 **--> Nessun obbligo, ma in caso di clonazione o uso del programma ci farebbe piacere che lasciaste due righe nel [Libro degli ospiti](https://github.com/franthemanIT/parlaConIO/issues/4#issue-1021050208) o su [forum.italia.it](https://forum.italia.it/t/parlaconio-uno-strumento-per-interagire-e-inviare-messaggi-su-app-io/26469)  <--**
 
-**--> L'uso di parlaConIO è "a rischio e pericolo" di chi lo esegue, non possiamo fornire alcuna garanzia. <--**
 
 Script Python per inviare messaggi verso l'app IO partendo da dati contenuti in file CSV
 
