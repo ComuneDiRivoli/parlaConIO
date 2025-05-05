@@ -83,7 +83,7 @@ dependsOn:
       versionMin: ''
 it:
   countryExtensionVersion: '0.2'
- conforme:
+  conforme:
     gdpr: false
     lineeGuidaDesign: false
     misureMinimeSicurezza: false
