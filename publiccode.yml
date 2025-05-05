@@ -2,23 +2,38 @@
 # metadata file that makes public software easily discoverable.
 # More info at https://github.com/italia/publiccode.yml
 
-publiccodeYmlVersion: '0.2'
+publiccodeYmlVersion: '0.4'
+name: 'parlaConIO'
+url: 'https://github.com/ComuneDiRivoli/parlaConIO'
+softwareVersion: '1.0'
+releaseDate: '2021-12-18'
+logo: 'screenshots/bitmap5.png'
+inputTypes:
+  - text/csv
+outputTypes:
+  - application/json
+  - text/csv
+platforms:
+  - windows
+  - linux
 categories:
   - communications
-dependsOn:
-  open:
-    - name: Python
-      optional: false
-      version: ''
-      versionMax: ''
-      versionMin: ''
-    - name: Python/requests
-      optional: false
-      version: ''
-      versionMax: ''
-      versionMin: ''
+usedBy:
+  - Comune di Rivoli
+  - Comune di Morrovalle
+developmentStatus: beta
+softwareType: standalone/desktop
+intendedAudience:
+  countries:
+    - it
+  scope:
+    - government
+    - local-authorities
+    - education
 description:
   it:
+    localisedName: 'parlaConIO"
+    genericName: API connector
     documentation: 'https://github.com/ComuneDiRivoli/parlaConIO/blob/4f5012c77b393f763bf10bbe9d30cb77a91281bc/README.md'
     features:
       - Invio di messaggi tramite app IO a partire da file CSV
@@ -29,7 +44,6 @@ description:
       - PNRR/Misura/1.4.3
       - PNRR/Beneficiari/Comuni
       - PNRR/Beneficiari/Altri enti
-    genericName: API connector
     longDescription: |
       Il software parlaConIO comprende degli script Python per **inviare messaggi verso l'app IO a partire da dati contenuti in file CSV**, tipicamente estratti dai software gestionali in uso presso le amministrazioni. Gli script funzionano da riga di comando e dovrebbero essere indipendenti dal sistema operativo in uso (Windows, Linux). Le operazioni di composizione e invio dei messaggi sono tracciate e memorizzate su log e file di report in formato testo o json. E' incluso anche uno script per la verifica dell'invio di un lotto (=blocco di messaggi ottenuti a partire da un file CSV con i dati). 
     screenshots:
@@ -42,55 +56,43 @@ description:
 #      - screenshots/parlaConIO_pasqua.png
 #      - screenshots/parlaConIO_pasqua2.png
     shortDescription: Invio di messaggi tramite app IO a partire da dati contenuti in file .csv
-developmentStatus: beta
-inputTypes:
-  - text/csv
-intendedAudience:
-  countries:
+legal:
+  license: AGPL-3.0-or-later
+  mainCopyrightOwner: Comune di Rivoli
+  repoOwner: Comune di Rivoli
+maintenance:
+  contacts:
+    - affiliation: Comune di Rivoli
+    - name: Francesco Del Castillo
+  type: internal
+localisation:
+  availableLanguages:
     - it
-  scope:
-    - government
-    - local-authorities
-    - education
+  localisationReady: false
+dependsOn:
+  open:
+    - name: Python
+      optional: false
+      version: ''
+      versionMax: ''
+      versionMin: ''
+    - name: Python/requests
+      optional: false
+      version: ''
+      versionMax: ''
+      versionMin: ''
 it:
-  riuso:
-    codiceIPA: c_h355
-  conforme:
+  countryExtensionVersion: '0.2'
+ conforme:
     gdpr: false
     lineeGuidaDesign: false
     misureMinimeSicurezza: false
     modelloInteroperabilita: false
-  countryExtensionVersion: '0.2'
   piattaforme:
     anpr: false
     cie: false
     pagopa: false
     spid: false
-legal:
-  license: AGPL-3.0-or-later
-  mainCopyrightOwner: Comune di Rivoli
-  repoOwner: Comune di Rivoli
-localisation:
-  availableLanguages:
-    - it
-  localisationReady: false
-logo: screenshots/bitmap5.png
-maintenance:
-  contacts:
-    - affiliation: Comune di Rivoli
-      name: Francesco Del Castillo
-  type: internal
-name: parlaConIO
-outputTypes:
-  - application/json
-  - text/csv
-platforms:
-  - windows
-  - linux
-releaseDate: '2021-12-18'
-softwareType: standalone/iot
-softwareVersion: '1.0'
-url: 'https://github.com/ComuneDiRivoli/parlaConIO'
-usedBy:
-  - Comune di Rivoli
-  - Comune di Morrovalle
+    io: true
+  riuso:
+    codiceIPA: c_h355
