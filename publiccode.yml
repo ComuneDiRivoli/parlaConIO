@@ -32,7 +32,7 @@ intendedAudience:
     - education
 description:
   it:
-    localisedName: 'parlaConIO"
+    localisedName: 'parlaConIO'
     genericName: API connector
     documentation: 'https://github.com/ComuneDiRivoli/parlaConIO/blob/4f5012c77b393f763bf10bbe9d30cb77a91281bc/README.md'
     features:
