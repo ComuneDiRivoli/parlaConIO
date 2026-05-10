@@ -1,18 +1,13 @@
-# This repository adheres to the publiccode.yml standard by including this 
+# This repository adheres to the publiccode.yml standard by including this
 # metadata file that makes public software easily discoverable.
-# More info at https://github.com/italia/publiccode.yml
+# More info at https://github.com/publiccodeyml/publiccode.yml
 
-publiccodeYmlVersion: '0.4'
+publiccodeYmlVersion: '0'
 name: 'parlaConIO'
 url: 'https://github.com/ComuneDiRivoli/parlaConIO'
 softwareVersion: '1.0'
 releaseDate: '2021-12-18'
 logo: 'screenshots/bitmap5.png'
-inputTypes:
-  - text/csv
-outputTypes:
-  - application/json
-  - text/csv
 platforms:
   - windows
   - linux
@@ -25,7 +20,7 @@ developmentStatus: beta
 softwareType: standalone/desktop
 intendedAudience:
   countries:
-    - it
+    - IT
   scope:
     - government
     - local-authorities
@@ -33,7 +28,6 @@ intendedAudience:
 description:
   it:
     localisedName: 'parlaConIO'
-    genericName: API connector
     documentation: 'https://github.com/ComuneDiRivoli/parlaConIO/blob/4f5012c77b393f763bf10bbe9d30cb77a91281bc/README.md'
     features:
       - Invio di messaggi tramite app IO a partire da file CSV
@@ -45,7 +39,7 @@ description:
       - PNRR/Beneficiari/Comuni
       - PNRR/Beneficiari/Altri enti
     longDescription: |
-      Il software parlaConIO comprende degli script Python per **inviare messaggi verso l'app IO a partire da dati contenuti in file CSV**, tipicamente estratti dai software gestionali in uso presso le amministrazioni. Gli script funzionano da riga di comando e dovrebbero essere indipendenti dal sistema operativo in uso (Windows, Linux). Le operazioni di composizione e invio dei messaggi sono tracciate e memorizzate su log e file di report in formato testo o json. E' incluso anche uno script per la verifica dell'invio di un lotto (=blocco di messaggi ottenuti a partire da un file CSV con i dati). 
+      Il software parlaConIO comprende degli script Python per **inviare messaggi verso l'app IO a partire da dati contenuti in file CSV**, tipicamente estratti dai software gestionali in uso presso le amministrazioni. Gli script funzionano da riga di comando e dovrebbero essere indipendenti dal sistema operativo in uso (Windows, Linux). Le operazioni di composizione e invio dei messaggi sono tracciate e memorizzate su log e file di report in formato testo o json. E' incluso anche uno script per la verifica dell'invio di un lotto (=blocco di messaggi ottenuti a partire da un file CSV con i dati).
     screenshots:
 #      - screenshots/xmas.png
       - screenshots/Screenshot.png
@@ -59,11 +53,10 @@ description:
 legal:
   license: AGPL-3.0-or-later
   mainCopyrightOwner: Comune di Rivoli
-  repoOwner: Comune di Rivoli
 maintenance:
   contacts:
-    - affiliation: Comune di Rivoli
     - name: Francesco Del Castillo
+      affiliation: Comune di Rivoli
   type: internal
 localisation:
   availableLanguages:
@@ -81,18 +74,6 @@ dependsOn:
       version: ''
       versionMax: ''
       versionMin: ''
-it:
-  countryExtensionVersion: '0.2'
-  conforme:
-    gdpr: false
-    lineeGuidaDesign: false
-    misureMinimeSicurezza: false
-    modelloInteroperabilita: false
-  piattaforme:
-    anpr: false
-    cie: false
-    pagopa: false
-    spid: false
-    io: true
-  riuso:
-    codiceIPA: c_h355
+organisation:
+  name: Comune di Rivoli
+  uri: 'urn:x-italian-pa:c_h355'
